@@ -30,11 +30,22 @@ public class TemplateEditor extends EditorPart {
 
 	private ImageTemplateMapper imageMapper;
 
+	private String browseForSaveFile() {
+		FileDialog fd = new FileDialog(Display.getCurrent().getActiveShell());
+		fd.setFilterExtensions(new String[] { "*.png" });
+		String result = fd.open();
+		if (result != null) {
+			if (!result.endsWith(".png")) {
+				result += ".png";
+			}
+		}
+		return result;
+	}
+
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		if (outFilePath == null) {
-			FileDialog fd = new FileDialog(Display.getCurrent().getActiveShell());
-			String chosenPath = fd.open();
+			String chosenPath = browseForSaveFile();
 			if (chosenPath == null) {
 				return;
 			} else {
@@ -53,8 +64,7 @@ public class TemplateEditor extends EditorPart {
 
 	@Override
 	public void doSaveAs() {
-		FileDialog fd = new FileDialog(Display.getCurrent().getActiveShell());
-		String chosenPath = fd.open();
+		String chosenPath = browseForSaveFile();
 		if (chosenPath != null) {
 			outFilePath = chosenPath;
 		} else {
