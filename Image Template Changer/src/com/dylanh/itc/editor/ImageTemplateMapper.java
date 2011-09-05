@@ -71,7 +71,7 @@ public class ImageTemplateMapper {
 	// }
 
 	public Control createPartControl(Composite parent) {
-		Composite area = new Composite(parent, SWT.BORDER);
+		Composite area = new Composite(parent, SWT.NONE);
 		area.setLayout(new GridLayout(2, false));
 
 		final Label zoomLabel = new Label(area, SWT.SINGLE);

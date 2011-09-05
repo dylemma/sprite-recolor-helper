@@ -65,15 +65,15 @@
             name="Sprite Recoloring Helper">
          <property
                name="aboutText"
-               value="RCP Mail template created by PDE">
+               value="A helpful tool for making image sprite recolors.">
          </property>
          <property
                name="windowImages"
                value="icons/yin-yang.png">
          </property>
          <property
-               name="aboutImage"
-               value="product_lg.gif">
+               name="appName"
+               value="Sprite Recoloring Helper">
          </property>
       </product>
    </extension>
