@@ -4,14 +4,21 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Scale;
+
+import uky.example.SWTImageCanvas;
 
 import com.dylanh.itc.util.RGBA;
 
@@ -20,6 +27,7 @@ public class ImageTemplateMapper {
 	private final Image input;
 	private final ColorMapping mapping;
 	private final Set<Label> labelsToUpdate = new HashSet<Label>();
+	private final Set<SWTImageCanvas> canvasesToUpdate = new HashSet<SWTImageCanvas>();
 
 	public ImageTemplateMapper(Image input, ColorMapping mapping) {
 		this.input = input;
@@ -48,15 +56,55 @@ public class ImageTemplateMapper {
 		for (Label label : labelsToUpdate) {
 			label.setImage(mappedImage);
 		}
+		for (SWTImageCanvas canvas : canvasesToUpdate) {
+			canvas.setImageData(mappedImage.getImageData());
+		}
 	}
 
+	// public Control createPartControl(Composite parent) {
+	// Label label = new Label(parent, SWT.SINGLE);
+	// if (mappedImage != null) {
+	// label.setImage(mappedImage);
+	// }
+	// labelsToUpdate.add(label);
+	// return label;
+	// }
+
 	public Control createPartControl(Composite parent) {
-		Label label = new Label(parent, SWT.SINGLE);
+		Composite area = new Composite(parent, SWT.BORDER);
+		area.setLayout(new GridLayout(2, false));
+
+		final Label zoomLabel = new Label(area, SWT.SINGLE);
+		zoomLabel.setText("Zoom: 1.0x  ");
+
+		final Scale scale = new Scale(area, SWT.NONE);
+		scale.setMinimum(0);
+		scale.setMaximum(6);
+		scale.setSelection(3);
+
+		scale.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+
+		Label label = new Label(area, SWT.SINGLE);
+		final SWTImageCanvas canvas = new SWTImageCanvas(area);
 		if (mappedImage != null) {
 			label.setImage(mappedImage);
+			canvas.setImageData(mappedImage.getImageData());
 		}
 		labelsToUpdate.add(label);
-		return label;
+		canvasesToUpdate.add(canvas);
+
+		scale.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				int exp = scale.getSelection() - 3;
+				double zoom = Math.pow(2, exp);
+				zoomLabel.setText("Zoom: " + zoom + "x  ");
+				canvas.zoomTo(zoom);
+			}
+		});
+
+		canvas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		return area;
 	}
 
 	private void mapImage() {

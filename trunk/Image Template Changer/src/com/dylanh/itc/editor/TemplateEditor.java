@@ -10,8 +10,10 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
@@ -147,7 +149,8 @@ public class TemplateEditor extends EditorPart {
 		});
 
 		imageMapper = new ImageTemplateMapper(image1, mappingComposite.getMapping());
-		imageMapper.createPartControl(parent);
+		Control preview = imageMapper.createPartControl(parent);
+		preview.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		sc.setContent(parent);
 		sc.setExpandHorizontal(true);
