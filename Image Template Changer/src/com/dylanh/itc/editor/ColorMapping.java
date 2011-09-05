@@ -52,4 +52,5 @@ public class ColorMapping extends HashMap<RGBA, RGBA> {
 			return cm;
 		}
 	};
+
 }
