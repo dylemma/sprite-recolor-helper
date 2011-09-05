@@ -5,9 +5,11 @@ import java.io.IOException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -105,7 +107,11 @@ public class TemplateEditor extends EditorPart {
 	}
 
 	@Override
-	public void createPartControl(Composite parent) {
+	public void createPartControl(Composite outer) {
+		outer.setLayout(new FillLayout());
+		ScrolledComposite sc = new ScrolledComposite(outer, SWT.V_SCROLL | SWT.H_SCROLL);
+		Composite parent = new Composite(sc, SWT.NONE);
+
 		GridLayout layout = new GridLayout(3, false);
 		parent.setLayout(layout);
 
@@ -143,6 +149,10 @@ public class TemplateEditor extends EditorPart {
 		imageMapper = new ImageTemplateMapper(image1, mappingComposite.getMapping());
 		imageMapper.createPartControl(parent);
 
+		sc.setContent(parent);
+		sc.setExpandHorizontal(true);
+		sc.setExpandVertical(true);
+		sc.setMinSize(400, 400);
 	}
 
 	@Override
