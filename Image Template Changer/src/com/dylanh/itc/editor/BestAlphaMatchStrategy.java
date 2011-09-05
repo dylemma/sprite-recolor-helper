@@ -32,7 +32,7 @@ public abstract class BestAlphaMatchStrategy implements ColorMappingStrategy {
 			cm.put(input, pickMatch(input, candidates));
 		}
 
-		return null;
+		return cm;
 	}
 
 	public abstract RGBA pickMatch(RGBA input, List<RGBA> candidates);
