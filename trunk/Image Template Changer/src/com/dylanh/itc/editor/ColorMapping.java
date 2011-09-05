@@ -6,13 +6,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.swt.graphics.RGB;
+import com.dylanh.itc.util.RGBA;
 
-public class ColorMapping extends HashMap<RGB, RGB> {
+public class ColorMapping extends HashMap<RGBA, RGBA> {
 	private static final long serialVersionUID = 8504032073542856018L;
 
 	public static interface Listener {
-		public void mappingChanged(ColorMapping mapRef, RGB key, RGB oldValue, RGB newValue);
+		public void mappingChanged(ColorMapping mapRef, RGBA key, RGBA oldValue, RGBA newValue);
 	}
 
 	private final Set<Listener> listeners = new HashSet<Listener>();
@@ -25,27 +25,27 @@ public class ColorMapping extends HashMap<RGB, RGB> {
 		listeners.remove(listener);
 	}
 
-	public void fireMappingChanged(RGB key, RGB oldVal, RGB newVal) {
+	public void fireMappingChanged(RGBA key, RGBA oldVal, RGBA newVal) {
 		for (Listener listener : listeners) {
 			listener.mappingChanged(this, key, oldVal, newVal);
 		}
 	}
 
 	@Override
-	public RGB put(RGB key, RGB newValue) {
-		RGB oldValue = super.put(key, newValue);
+	public RGBA put(RGBA key, RGBA newValue) {
+		RGBA oldValue = super.put(key, newValue);
 		fireMappingChanged(key, oldValue, newValue);
 		return oldValue;
 	}
 
 	public static ColorMappingStrategy randomStrategy = new ColorMappingStrategy() {
 		@Override
-		public ColorMapping createMapping(java.util.Collection<RGB> keyDomain, java.util.Collection<RGB> mapDomain) {
-			RGB[] lefts = keyDomain.toArray(new RGB[keyDomain.size()]);
-			RGB[] rights = mapDomain.toArray(new RGB[mapDomain.size()]);
+		public ColorMapping createMapping(java.util.Collection<RGBA> keyDomain, java.util.Collection<RGBA> mapDomain) {
+			RGBA[] lefts = keyDomain.toArray(new RGBA[keyDomain.size()]);
+			RGBA[] rights = mapDomain.toArray(new RGBA[mapDomain.size()]);
 			ColorMapping cm = new ColorMapping();
-			for (RGB key : lefts) {
-				RGB value = rights[rand.nextInt(rights.length)];
+			for (RGBA key : lefts) {
+				RGBA value = rights[rand.nextInt(rights.length)];
 				cm.put(key, value);
 			}
 

@@ -12,9 +12,11 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 
+import com.dylanh.itc.util.RGBA;
+
 public class ColorTemplate {
 
-	private final Map<RGB, Integer> colorCounts = new HashMap<RGB, Integer>();
+	private final Map<RGBA, Integer> colorCounts = new HashMap<RGBA, Integer>();
 
 	public ColorTemplate(Image image) {
 		ImageData imageData = image.getImageData();
@@ -22,13 +24,15 @@ public class ColorTemplate {
 		for (int i = 0; i < imageBounds.width; ++i) {
 			for (int j = 0; j < imageBounds.height; ++j) {
 				int pixelRaw = imageData.getPixel(i + imageData.x, j + imageData.y);
+				int alpha = imageData.getAlpha(i + imageData.x, j + imageData.y);
 				RGB pixel = imageData.palette.getRGB(pixelRaw);
-				addPixel(pixel);
+				RGBA rgba = new RGBA(pixel, alpha);
+				addPixel(rgba);
 			}
 		}
 	}
 
-	private void addPixel(RGB pixel) {
+	private void addPixel(RGBA pixel) {
 		int count = colorCounts.containsKey(pixel) ? colorCounts.get(pixel) : 0;
 		colorCounts.put(pixel, count + 1);
 	}
@@ -37,11 +41,11 @@ public class ColorTemplate {
 		return colorCounts.size();
 	}
 
-	public List<RGB> pixelsByFrequency() {
-		ArrayList<RGB> list = new ArrayList<RGB>(colorCounts.keySet());
-		Comparator<RGB> comparator = new Comparator<RGB>() {
+	public List<RGBA> pixelsByFrequency() {
+		ArrayList<RGBA> list = new ArrayList<RGBA>(colorCounts.keySet());
+		Comparator<RGBA> comparator = new Comparator<RGBA>() {
 			@Override
-			public int compare(RGB arg0, RGB arg1) {
+			public int compare(RGBA arg0, RGBA arg1) {
 				return colorCounts.get(arg1) - colorCounts.get(arg0);
 			}
 		};

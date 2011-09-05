@@ -9,6 +9,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
+import com.dylanh.itc.util.RGBA;
+
 public class ColorHelper {
 	public static RGB rgba(int pixel) {
 		int r = (pixel >> 24) & 0xFF;
@@ -39,20 +41,25 @@ public class ColorHelper {
 		return color;
 	}
 
-	private static final Map<Color, Image> colorSwatches = new HashMap<Color, Image>();
+	private static final Map<RGBA, Image> colorSwatches = new HashMap<RGBA, Image>();
 	private static final int colorSwatchSize = 15;
 
-	public static Image getColorSwatch(Color color) {
-		if (colorSwatches.containsKey(color)) {
-			return colorSwatches.get(color);
+	public static Image getColorSwatch(RGBA rgba) {
+		if (colorSwatches.containsKey(rgba)) {
+			return colorSwatches.get(rgba);
 		}
 		Image img = new Image(Display.getDefault(), colorSwatchSize, colorSwatchSize);
 		GC gc = new GC(img);
-		gc.setBackground(color);
+		gc.setBackground(getColor(rgba.getRgb()));
+		gc.setAlpha(rgba.getAlpha());
 		gc.fillRectangle(0, 0, colorSwatchSize, colorSwatchSize);
 		gc.dispose();
-		colorSwatches.put(color, img);
+		colorSwatches.put(rgba, img);
 		return img;
+	}
+
+	public static Image getColorSwatch(Color color) {
+		return getColorSwatch(new RGBA(color.getRGB(), 255));
 	}
 
 	public static void dispose() {
