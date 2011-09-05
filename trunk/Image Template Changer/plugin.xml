@@ -62,7 +62,7 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="Image_Template_Changer.application"
-            name="Sprite Recoloring Helper">
+            name="Sprite Recolorer">
          <property
                name="aboutText"
                value="A helpful tool for making image sprite recolors.">
@@ -73,7 +73,7 @@
          </property>
          <property
                name="appName"
-               value="Sprite Recoloring Helper">
+               value="Sprite Recolorer">
          </property>
       </product>
    </extension>
