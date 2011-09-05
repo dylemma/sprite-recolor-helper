@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Sprite Recoloring Helper" uid="com.dylanh.itc.winlauncher" id="Image_Template_Changer.product" application="Image_Template_Changer.application" version="1.0.0" useFeatures="false" includeLaunchers="true">
+<product name="Sprite Recolorer" uid="com.dylanh.itc.winlauncher" id="Image_Template_Changer.product" application="Image_Template_Changer.application" version="1.0.0" useFeatures="false" includeLaunchers="true">
 
    <aboutInfo>
       <text>
@@ -19,7 +19,7 @@
    <windowImages i16="icons/yin-yang.png"/>
 
 
-   <launcher>
+   <launcher name="Sprite Recolorer.exe">
       <solaris/>
       <win useIco="false">
          <bmp/>
