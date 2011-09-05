@@ -1,6 +1,5 @@
 package com.dylanh.itc.rcp;
 
-import image_template_changer.Perspective;
 
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchAdvisor;
