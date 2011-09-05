@@ -130,7 +130,7 @@ public class TemplateEditor extends EditorPart {
 		template2Label.setImage(templateImage2);
 
 		ColorMappingComposite mappingComposite = new ColorMappingComposite(template1.pixelsByFrequency(),
-				template2.pixelsByFrequency(), ColorMapping.randomStrategy, parent, SWT.BORDER);
+				template2.pixelsByFrequency(), new BestColorMatchStrategy(), parent, SWT.BORDER);
 
 		mappingComposite.getMapping().addListener(new ColorMapping.Listener() {
 			@Override
