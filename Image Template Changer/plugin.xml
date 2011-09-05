@@ -15,7 +15,7 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            class="image_template_changer.Perspective"
+            class="com.dylanh.itc.rcp.Perspective"
             id="Image_Template_Changer.perspective"
             name="RCP Perspective">
       </perspective>
