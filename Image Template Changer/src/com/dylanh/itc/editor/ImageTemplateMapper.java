@@ -13,6 +13,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
+import com.dylanh.itc.util.RGBA;
+
 public class ImageTemplateMapper {
 	private Image mappedImage = null;
 	private final Image input;
@@ -26,7 +28,7 @@ public class ImageTemplateMapper {
 		mapping.addListener(new ColorMapping.Listener() {
 
 			@Override
-			public void mappingChanged(ColorMapping mapRef, RGB key, RGB oldValue, RGB newValue) {
+			public void mappingChanged(ColorMapping mapRef, RGBA key, RGBA oldValue, RGBA newValue) {
 				remapImage();
 			}
 		});
@@ -60,21 +62,37 @@ public class ImageTemplateMapper {
 	private void mapImage() {
 		Rectangle bounds = input.getBounds();
 		ImageData imageData = input.getImageData();
-		mappedImage = new Image(input.getDevice(), bounds.width, bounds.height);
-		GC gc = new GC(mappedImage);
 
-		for (int x = 0; x < bounds.width; ++x) {
-			for (int y = 0; y < bounds.height; ++y) {
+		int height = imageData.height;
+		int width = imageData.width;
+
+		Image tempImage = new Image(input.getDevice(), bounds.width, bounds.height);
+		GC gc = new GC(tempImage);
+		byte[] alphaData = new byte[height * width];
+		// for (int x = 0; x < bounds.width; ++x) {
+		// for (int y = 0; y < bounds.height; ++y) {
+		for (int y = 0; y < height; y++) {
+			byte[] alphaRow = new byte[width];
+			for (int x = 0; x < width; x++) {
 				int rawPixel = imageData.getPixel(x, y);
 				RGB pixel = imageData.palette.getRGB(rawPixel);
-				RGB mappedPixel = mapping.get(pixel);
+				int alpha = imageData.getAlpha(x, y);
+				RGBA mappedPixel = mapping.get(new RGBA(pixel, alpha));
+				alphaRow[x] = (byte) mappedPixel.getAlpha();
 				// int rawAlpha = imageData.getAlpha(x, y);
-				gc.setForeground(ColorHelper.getColor(mappedPixel));
+				gc.setForeground(ColorHelper.getColor(mappedPixel.getRgb()));
+				gc.setAlpha(mappedPixel.getAlpha());
+				// System.out.println(".a = " + gc.getAlpha());
 				gc.drawPoint(x, y);
 			}
+			System.arraycopy(alphaRow, 0, alphaData, y * width, width);
 		}
 		gc.dispose();
 
-		System.out.println("mapped new image");
+		ImageData mappedImageData = tempImage.getImageData();
+		mappedImageData.alphaData = alphaData;
+		tempImage.dispose();
+		mappedImage = new Image(input.getDevice(), mappedImageData);
+
 	}
 }

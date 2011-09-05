@@ -1,5 +1,6 @@
 package com.dylanh.itc.editor;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -7,7 +8,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -17,6 +17,8 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
+
+import com.dylanh.itc.util.RGBA;
 
 public class TemplateEditor extends EditorPart {
 
@@ -59,6 +61,8 @@ public class TemplateEditor extends EditorPart {
 			loader.save(outFilePath, SWT.IMAGE_PNG);
 			dirty = false;
 			firePropertyChange(PROP_DIRTY);
+
+			setPartName(new File(outFilePath).getName());
 		}
 	}
 
@@ -130,8 +134,7 @@ public class TemplateEditor extends EditorPart {
 
 		mappingComposite.getMapping().addListener(new ColorMapping.Listener() {
 			@Override
-			public void mappingChanged(ColorMapping mapRef, RGB key, RGB oldValue, RGB newValue) {
-				System.out.println("Mapping for " + key + " just changed to " + newValue);
+			public void mappingChanged(ColorMapping mapRef, RGBA key, RGBA oldValue, RGBA newValue) {
 				dirty = true;
 				firePropertyChange(PROP_DIRTY);
 			}
@@ -144,13 +147,10 @@ public class TemplateEditor extends EditorPart {
 
 	@Override
 	public void setFocus() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void dispose() {
-		System.out.println("Disposing editor: " + this + " with inputs " + input.getName());
 		super.dispose();
 
 		if (image1 != null)

@@ -7,24 +7,25 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
+import com.dylanh.itc.util.RGBA;
+
 public class ColorSwatchPopup extends Dialog {
 
-	private final Collection<RGB> colorDomain;
-	private RGB colorChoice = null;
+	private final Collection<RGBA> colorDomain;
+	private RGBA colorChoice = null;
 
-	public ColorSwatchPopup(Collection<RGB> colorDomain, Shell parentShell) {
+	public ColorSwatchPopup(Collection<RGBA> colorDomain, Shell parentShell) {
 		super(parentShell);
 		this.colorDomain = colorDomain;
 	}
 
-	public RGB getColorChoice() {
+	public RGBA getColorChoice() {
 		return colorChoice;
 	}
 
@@ -35,26 +36,26 @@ public class ColorSwatchPopup extends Dialog {
 
 		parent.setLayout(new GridLayout(numColumns, true));
 
-		for (RGB rgb : colorDomain) {
+		for (RGBA rgba : colorDomain) {
 			Button button = new Button(parent, SWT.PUSH);
-			button.setImage(ColorHelper.getColorSwatch(ColorHelper.getColor(rgb)));
-
-			button.addSelectionListener(new RGBSelectionAdapter(rgb));
+			button.setImage(ColorHelper.getColorSwatch(rgba));
+			button.setText(rgba.toString());
+			button.addSelectionListener(new RGBSelectionAdapter(rgba));
 		}
 
 		return super.createDialogArea(parent);
 	}
 
 	protected class RGBSelectionAdapter extends SelectionAdapter {
-		private final RGB rgb;
+		private final RGBA rgba;
 
-		public RGBSelectionAdapter(RGB rgb) {
-			this.rgb = rgb;
+		public RGBSelectionAdapter(RGBA rgba) {
+			this.rgba = rgba;
 		}
 
 		@Override
 		public void widgetSelected(SelectionEvent e) {
-			colorChoice = rgb;
+			colorChoice = rgba;
 			okPressed();
 		}
 	}
