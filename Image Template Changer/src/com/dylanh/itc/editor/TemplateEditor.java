@@ -1,9 +1,9 @@
 package com.dylanh.itc.editor;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
-import org.eclipse.core.commands.operations.IUndoContext;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -22,12 +22,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.operations.UndoRedoActionGroup;
 import org.eclipse.ui.part.EditorPart;
 
-import com.dylanh.itc.alg.BestColorMatchStrategy;
 import com.dylanh.itc.data.ColorMapping;
-import com.dylanh.itc.data.ColorTemplate;
 import com.dylanh.itc.editor.widgetry.ColorMappingComposite;
 import com.dylanh.itc.editor.widgetry.ImageTemplateMapper;
 import com.dylanh.itc.util.ColorTemplateImage;
@@ -37,8 +34,7 @@ public class TemplateEditor extends EditorPart
 {
 
 	private TemplateEditorInput input;
-
-	private Image image1, image2, templateImage1, templateImage2;
+	private final Set<Image> imagesToDispose = new HashSet<Image>();
 
 	private boolean dirty = true;
 
@@ -112,34 +108,11 @@ public class TemplateEditor extends EditorPart
 		if (input instanceof TemplateEditorInput)
 		{
 			this.input = (TemplateEditorInput) input;
-			try
-			{
-				image1 = new Image(Display.getCurrent(), this.input.image1.getCanonicalPath());
-				image2 = new Image(Display.getCurrent(), this.input.image2.getCanonicalPath());
-			}
-			catch (IOException e)
-			{
-				throw new PartInitException("Failed to load input images", e);
-			}
 		}
 		else
 		{
 			throw new PartInitException("Editor input was not a TemplateEditorInput");
 		}
-
-		IUndoContext undoContext = site.getWorkbenchWindow().getWorkbench().getOperationSupport().getUndoContext();
-		// new EditorUndoContext(this);
-		// UndoActionHandler undoAction = new UndoActionHandler(getSite(),
-		// undoContext);
-		// RedoActionHandler redoAction = new RedoActionHandler(getSite(),
-		// undoContext);
-		// site.getActionBars().setGlobalActionHandler(ActionFactory.UNDO.getId(),
-		// undoAction);
-		// site.getActionBars().setGlobalActionHandler(ActionFactory.REDO.getId(),
-		// redoAction);
-
-		new UndoRedoActionGroup(site, undoContext, true).fillActionBars(site.getActionBars());
-
 	}
 
 	@Override
@@ -172,22 +145,20 @@ public class TemplateEditor extends EditorPart
 		Label image2Label = new Label(inputsComposite, SWT.SINGLE);
 		Label template2Label = new Label(inputsComposite, SWT.SINGLE);
 
-		image1Label.setImage(image1);
-		image2Label.setImage(image2);
+		image1Label.setImage(input.getImage1());
+		image2Label.setImage(input.getImage2());
 
-		ColorTemplate template1 = new ColorTemplate(image1);
-		ColorTemplate template2 = new ColorTemplate(image2);
-
-		templateImage1 = ColorTemplateImage.getTemplateImage(template1, image1.getBounds());
-		templateImage2 = ColorTemplateImage.getTemplateImage(template2, image2.getBounds());
-
+		Image templateImage1 = ColorTemplateImage.getTemplateImage(input.getTemplate1(), input.getImage1().getBounds());
+		Image templateImage2 = ColorTemplateImage.getTemplateImage(input.getTemplate2(), input.getImage2().getBounds());
 		template1Label.setImage(templateImage1);
 		template2Label.setImage(templateImage2);
+		imagesToDispose.add(templateImage1);
+		imagesToDispose.add(templateImage2);
 
-		ColorMappingComposite mappingComposite = new ColorMappingComposite(template1.pixelsByFrequency(),
-				template2.pixelsByFrequency(), new BestColorMatchStrategy(), parent, SWT.NONE);
+		ColorMappingComposite mappingComposite = new ColorMappingComposite(input.getTemplate1().pixelsByFrequency(), input
+				.getTemplate2().pixelsByFrequency(), input.getColorMapping(), parent, SWT.NONE);
 
-		mappingComposite.getMapping().addListener(new ColorMapping.Listener()
+		input.getColorMapping().addListener(new ColorMapping.Listener()
 		{
 			@Override
 			public void mappingChanged(ColorMapping mapRef, RGBA key, RGBA oldValue, RGBA newValue)
@@ -197,7 +168,7 @@ public class TemplateEditor extends EditorPart
 			}
 		});
 
-		imageMapper = new ImageTemplateMapper(image1, mappingComposite.getMapping());
+		imageMapper = new ImageTemplateMapper(input.getImage1(), input.getColorMapping());
 		Control preview = imageMapper.createPartControl(parent);
 		preview.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
@@ -217,11 +188,10 @@ public class TemplateEditor extends EditorPart
 	public void dispose()
 	{
 		super.dispose();
-
-		if (image1 != null)
-			image1.dispose();
-		if (image2 != null)
-			image2.dispose();
+		for (Image image : imagesToDispose)
+		{
+			image.dispose();
+		}
 	}
 
 }
