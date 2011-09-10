@@ -13,26 +13,28 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-import com.dylanh.itc.alg.ColorMappingStrategy;
 import com.dylanh.itc.data.ColorMapping;
 import com.dylanh.itc.util.ColorHelper;
 import com.dylanh.itc.util.RGBA;
 
-public class ColorMappingComposite extends Composite {
+public class ColorMappingComposite extends Composite
+{
 
 	private final ColorMapping mapping;
 	private final Collection<RGBA> mapDomain;
 
-	public ColorMappingComposite(Collection<RGBA> keyDomain, Collection<RGBA> mapDomain,
-			ColorMappingStrategy mappingStrategy, Composite parent, int style) {
+	public ColorMappingComposite(Collection<RGBA> keyDomain, Collection<RGBA> mapDomain, ColorMapping mapping, Composite parent,
+			int style)
+	{
 		super(parent, style);
-		this.mapping = mappingStrategy.createMapping(keyDomain, mapDomain);
+		this.mapping = mapping;
 		this.mapDomain = mapDomain;
 
 		GridLayout layout = new GridLayout(3, false);
 		this.setLayout(layout);
 
-		for (Entry<RGBA, RGBA> entry : mapping.entrySet()) {
+		for (Entry<RGBA, RGBA> entry : mapping.entrySet())
+		{
 			Image keySwatch = ColorHelper.getColorSwatch(entry.getKey());
 			Image mapSwatch = ColorHelper.getColorSwatch(entry.getValue());
 
@@ -49,23 +51,23 @@ public class ColorMappingComposite extends Composite {
 		}
 	}
 
-	public ColorMapping getMapping() {
-		return mapping;
-	}
-
-	protected class ColorPickerAdapter extends SelectionAdapter {
+	protected class ColorPickerAdapter extends SelectionAdapter
+	{
 		private final RGBA key;
 		private final Button button;
 
-		public ColorPickerAdapter(RGBA key, Button button) {
+		public ColorPickerAdapter(RGBA key, Button button)
+		{
 			this.key = key;
 			this.button = button;
 		}
 
 		@Override
-		public void widgetSelected(SelectionEvent e) {
+		public void widgetSelected(SelectionEvent e)
+		{
 			ColorSwatchPopup popup = new ColorSwatchPopup(mapDomain, e.display.getActiveShell());
-			if (popup.open() == Window.OK) {
+			if (popup.open() == Window.OK)
+			{
 				RGBA newRGBA = popup.getColorChoice();
 				mapping.put(key, newRGBA);
 				button.setImage(ColorHelper.getColorSwatch(newRGBA));
