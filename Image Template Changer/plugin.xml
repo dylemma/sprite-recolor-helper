@@ -154,18 +154,6 @@
                   style="push">
             </command>
          </menu>
-         <menu
-               label="Edit"
-               mnemonic="E">
-            <command
-                  commandId="org.eclipse.ui.edit.undo"
-                  style="push">
-            </command>
-            <command
-                  commandId="org.eclipse.ui.edit.redo"
-                  style="push">
-            </command>
-         </menu>
       </menuContribution>
    </extension>
 
