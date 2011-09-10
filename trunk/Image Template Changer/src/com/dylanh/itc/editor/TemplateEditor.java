@@ -3,6 +3,7 @@ package com.dylanh.itc.editor;
 import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.core.commands.operations.IUndoContext;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -21,6 +22,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.operations.UndoRedoActionGroup;
 import org.eclipse.ui.part.EditorPart;
 
 import com.dylanh.itc.alg.BestColorMatchStrategy;
@@ -124,6 +126,20 @@ public class TemplateEditor extends EditorPart
 		{
 			throw new PartInitException("Editor input was not a TemplateEditorInput");
 		}
+
+		IUndoContext undoContext = site.getWorkbenchWindow().getWorkbench().getOperationSupport().getUndoContext();
+		// new EditorUndoContext(this);
+		// UndoActionHandler undoAction = new UndoActionHandler(getSite(),
+		// undoContext);
+		// RedoActionHandler redoAction = new RedoActionHandler(getSite(),
+		// undoContext);
+		// site.getActionBars().setGlobalActionHandler(ActionFactory.UNDO.getId(),
+		// undoAction);
+		// site.getActionBars().setGlobalActionHandler(ActionFactory.REDO.getId(),
+		// redoAction);
+
+		new UndoRedoActionGroup(site, undoContext, true).fillActionBars(site.getActionBars());
+
 	}
 
 	@Override
