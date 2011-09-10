@@ -1,4 +1,4 @@
-package com.dylanh.itc.editor;
+package com.dylanh.itc.editor.widgetry;
 
 import java.util.Collection;
 
@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
+import com.dylanh.itc.util.ColorHelper;
 import com.dylanh.itc.util.RGBA;
 
 public class ColorSwatchPopup extends Dialog {

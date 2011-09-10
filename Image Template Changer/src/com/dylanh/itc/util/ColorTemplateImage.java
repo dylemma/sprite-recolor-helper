@@ -1,4 +1,4 @@
-package com.dylanh.itc.editor;
+package com.dylanh.itc.util;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 
-import com.dylanh.itc.util.RGBA;
+import com.dylanh.itc.data.ColorTemplate;
 
 public class ColorTemplateImage {
 	public static Image getTemplateImage(Image image) {

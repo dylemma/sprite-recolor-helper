@@ -22,6 +22,12 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
+import com.dylanh.itc.alg.BestColorMatchStrategy;
+import com.dylanh.itc.data.ColorMapping;
+import com.dylanh.itc.data.ColorTemplate;
+import com.dylanh.itc.editor.widgetry.ColorMappingComposite;
+import com.dylanh.itc.editor.widgetry.ImageTemplateMapper;
+import com.dylanh.itc.util.ColorTemplateImage;
 import com.dylanh.itc.util.RGBA;
 
 public class TemplateEditor extends EditorPart {
