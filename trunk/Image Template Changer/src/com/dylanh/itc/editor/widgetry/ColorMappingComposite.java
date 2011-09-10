@@ -1,4 +1,4 @@
-package com.dylanh.itc.editor;
+package com.dylanh.itc.editor.widgetry;
 
 import java.util.Collection;
 import java.util.Map.Entry;
@@ -13,6 +13,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
+import com.dylanh.itc.alg.ColorMappingStrategy;
+import com.dylanh.itc.data.ColorMapping;
+import com.dylanh.itc.util.ColorHelper;
 import com.dylanh.itc.util.RGBA;
 
 public class ColorMappingComposite extends Composite {

@@ -1,4 +1,4 @@
-package com.dylanh.itc.editor;
+package com.dylanh.itc.alg;
 
 import java.util.List;
 

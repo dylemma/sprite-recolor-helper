@@ -1,4 +1,4 @@
-package com.dylanh.itc.editor;
+package com.dylanh.itc.data;
 
 import static com.dylanh.itc.util.Rand.rand;
 
@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.dylanh.itc.alg.ColorMappingStrategy;
 import com.dylanh.itc.util.RGBA;
 
 public class ColorMapping extends HashMap<RGBA, RGBA> {
