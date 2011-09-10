@@ -9,6 +9,7 @@ import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -30,7 +31,8 @@ import com.dylanh.itc.editor.widgetry.ImageTemplateMapper;
 import com.dylanh.itc.util.ColorTemplateImage;
 import com.dylanh.itc.util.RGBA;
 
-public class TemplateEditor extends EditorPart {
+public class TemplateEditor extends EditorPart
+{
 
 	private TemplateEditorInput input;
 
@@ -42,12 +44,15 @@ public class TemplateEditor extends EditorPart {
 
 	private ImageTemplateMapper imageMapper;
 
-	private String browseForSaveFile() {
+	private String browseForSaveFile()
+	{
 		FileDialog fd = new FileDialog(Display.getCurrent().getActiveShell());
 		fd.setFilterExtensions(new String[] { "*.png" });
 		String result = fd.open();
-		if (result != null) {
-			if (!result.endsWith(".png")) {
+		if (result != null)
+		{
+			if (!result.endsWith(".png"))
+			{
 				result += ".png";
 			}
 		}
@@ -55,16 +60,22 @@ public class TemplateEditor extends EditorPart {
 	}
 
 	@Override
-	public void doSave(IProgressMonitor monitor) {
-		if (outFilePath == null) {
+	public void doSave(IProgressMonitor monitor)
+	{
+		if (outFilePath == null)
+		{
 			String chosenPath = browseForSaveFile();
-			if (chosenPath == null) {
+			if (chosenPath == null)
+			{
 				return;
-			} else {
+			}
+			else
+			{
 				outFilePath = chosenPath;
 			}
 		}
-		if (outFilePath != null) {
+		if (outFilePath != null)
+		{
 			Image image = imageMapper.getMappedImage();
 			ImageLoader loader = new ImageLoader();
 			loader.data = new ImageData[] { image.getImageData() };
@@ -77,45 +88,59 @@ public class TemplateEditor extends EditorPart {
 	}
 
 	@Override
-	public void doSaveAs() {
+	public void doSaveAs()
+	{
 		String chosenPath = browseForSaveFile();
-		if (chosenPath != null) {
+		if (chosenPath != null)
+		{
 			outFilePath = chosenPath;
-		} else {
+		}
+		else
+		{
 			return;
 		}
 		doSave(null);
 	}
 
 	@Override
-	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
+	public void init(IEditorSite site, IEditorInput input) throws PartInitException
+	{
 		setSite(site);
 		setInput(input);
-		if (input instanceof TemplateEditorInput) {
+		if (input instanceof TemplateEditorInput)
+		{
 			this.input = (TemplateEditorInput) input;
-			try {
+			try
+			{
 				image1 = new Image(Display.getCurrent(), this.input.image1.getCanonicalPath());
 				image2 = new Image(Display.getCurrent(), this.input.image2.getCanonicalPath());
-			} catch (IOException e) {
+			}
+			catch (IOException e)
+			{
 				throw new PartInitException("Failed to load input images", e);
 			}
-		} else {
+		}
+		else
+		{
 			throw new PartInitException("Editor input was not a TemplateEditorInput");
 		}
 	}
 
 	@Override
-	public boolean isDirty() {
+	public boolean isDirty()
+	{
 		return dirty;
 	}
 
 	@Override
-	public boolean isSaveAsAllowed() {
+	public boolean isSaveAsAllowed()
+	{
 		return true;
 	}
 
 	@Override
-	public void createPartControl(Composite outer) {
+	public void createPartControl(Composite outer)
+	{
 		outer.setLayout(new FillLayout());
 		ScrolledComposite sc = new ScrolledComposite(outer, SWT.V_SCROLL | SWT.H_SCROLL);
 		Composite parent = new Composite(sc, SWT.NONE);
@@ -146,9 +171,11 @@ public class TemplateEditor extends EditorPart {
 		ColorMappingComposite mappingComposite = new ColorMappingComposite(template1.pixelsByFrequency(),
 				template2.pixelsByFrequency(), new BestColorMatchStrategy(), parent, SWT.NONE);
 
-		mappingComposite.getMapping().addListener(new ColorMapping.Listener() {
+		mappingComposite.getMapping().addListener(new ColorMapping.Listener()
+		{
 			@Override
-			public void mappingChanged(ColorMapping mapRef, RGBA key, RGBA oldValue, RGBA newValue) {
+			public void mappingChanged(ColorMapping mapRef, RGBA key, RGBA oldValue, RGBA newValue)
+			{
 				dirty = true;
 				firePropertyChange(PROP_DIRTY);
 			}
@@ -161,15 +188,18 @@ public class TemplateEditor extends EditorPart {
 		sc.setContent(parent);
 		sc.setExpandHorizontal(true);
 		sc.setExpandVertical(true);
-		sc.setMinSize(400, 400);
+
+		Point prefSize = parent.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+		sc.setMinSize(prefSize);
 	}
 
 	@Override
-	public void setFocus() {
-	}
+	public void setFocus()
+	{}
 
 	@Override
-	public void dispose() {
+	public void dispose()
+	{
 		super.dispose();
 
 		if (image1 != null)
