@@ -4,6 +4,9 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.core.commands.operations.IOperationHistory;
+import org.eclipse.core.commands.operations.IUndoContext;
+import org.eclipse.core.commands.operations.UndoContext;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -27,6 +30,7 @@ import org.eclipse.ui.part.EditorPart;
 import com.dylanh.itc.data.ColorMapping;
 import com.dylanh.itc.editor.widgetry.ColorMappingComposite;
 import com.dylanh.itc.editor.widgetry.ImageTemplateMapper;
+import com.dylanh.itc.rcp.UndoRedoHandlerFactory;
 import com.dylanh.itc.util.ColorTemplateImage;
 import com.dylanh.itc.util.RGBA;
 
@@ -41,6 +45,8 @@ public class TemplateEditor extends EditorPart
 	private String outFilePath = null;
 
 	private ImageTemplateMapper imageMapper;
+
+	private final IUndoContext undoContext = new UndoContext();
 
 	private String browseForSaveFile()
 	{
@@ -155,8 +161,11 @@ public class TemplateEditor extends EditorPart
 		imagesToDispose.add(templateImage1);
 		imagesToDispose.add(templateImage2);
 
+		IOperationHistory opHistory = getSite().getWorkbenchWindow().getWorkbench().getOperationSupport().getOperationHistory();
+		ColorMappingWithOperations wrappedMapping = new ColorMappingWithOperations(input.getColorMapping(), undoContext,
+				opHistory);
 		ColorMappingComposite mappingComposite = new ColorMappingComposite(input.getTemplate1().pixelsByFrequency(), input
-				.getTemplate2().pixelsByFrequency(), input.getColorMapping(), parent, SWT.NONE);
+				.getTemplate2().pixelsByFrequency(), wrappedMapping, parent, SWT.NONE);
 
 		input.getColorMapping().addListener(new ColorMapping.Listener()
 		{
@@ -182,7 +191,10 @@ public class TemplateEditor extends EditorPart
 
 	@Override
 	public void setFocus()
-	{}
+	{
+		System.out.println("Setting focus on " + this);
+		UndoRedoHandlerFactory.getUndoRedoManager().setUndoContext(undoContext);
+	}
 
 	@Override
 	public void dispose()
