@@ -1,6 +1,8 @@
 package com.dylanh.itc.editor.widgetry;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.eclipse.jface.window.Window;
@@ -14,6 +16,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 import com.dylanh.itc.data.ColorMapping;
+import com.dylanh.itc.data.ColorMapping.Listener;
 import com.dylanh.itc.util.ColorHelper;
 import com.dylanh.itc.util.RGBA;
 
@@ -33,6 +36,8 @@ public class ColorMappingComposite extends Composite
 		GridLayout layout = new GridLayout(3, false);
 		this.setLayout(layout);
 
+		final Map<RGBA, Button> buttonsForColorKeys = new HashMap<RGBA, Button>();
+
 		for (Entry<RGBA, RGBA> entry : mapping.entrySet())
 		{
 			Image keySwatch = ColorHelper.getColorSwatch(entry.getKey());
@@ -48,7 +53,22 @@ public class ColorMappingComposite extends Composite
 			mapButton.setImage(mapSwatch);
 			mapButton.setToolTipText(entry.getValue().toString());
 			mapButton.addSelectionListener(new ColorPickerAdapter(entry.getKey(), mapButton));
+
+			buttonsForColorKeys.put(entry.getKey(), mapButton);
 		}
+
+		// cause buttons to update when the mapping changes
+		mapping.addListener(new Listener()
+		{
+			@Override
+			public void mappingChanged(ColorMapping mapRef, RGBA key, RGBA oldValue, RGBA newValue)
+			{
+				System.out.println("Mapping changed: updating button");
+				Button mappedButton = buttonsForColorKeys.get(key);
+				mappedButton.setImage(ColorHelper.getColorSwatch(newValue));
+				mappedButton.setToolTipText(newValue.toString());
+			}
+		});
 	}
 
 	protected class ColorPickerAdapter extends SelectionAdapter
@@ -70,8 +90,7 @@ public class ColorMappingComposite extends Composite
 			{
 				RGBA newRGBA = popup.getColorChoice();
 				mapping.put(key, newRGBA);
-				button.setImage(ColorHelper.getColorSwatch(newRGBA));
-				button.setToolTipText(newRGBA.toString());
+
 			}
 		}
 	}

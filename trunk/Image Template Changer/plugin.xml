@@ -22,35 +22,34 @@
    </extension>
    <extension
          point="org.eclipse.ui.commands">
-      <category
-            name="Mail"
-            id="Image_Template_Changer.category">
-      </category>
       <command
-            name="Open Mailbox"
-            description="Opens a mailbox"
-            categoryId="Image_Template_Changer.category"
-            id="Image_Template_Changer.open">
+            defaultHandler="com.dylanh.itc.api.OpenEditorHandler"
+            id="com.dylanh.itc.commands.openeditor"
+            name="Open Editor">
+         <commandParameter
+               id="com.dylanh.itc.openeditor.creatorid"
+               name="Creator ID"
+               optional="false">
+         </commandParameter>
+         <commandParameter
+               id="com.dylanh.itc.openeditor.editorid"
+               name="Editor ID"
+               optional="false">
+         </commandParameter>
       </command>
       <command
-            name="Open Message Dialog"
-            description="Open a message dialog"
-            categoryId="Image_Template_Changer.category"
-            id="Image_Template_Changer.openMessage">
+            defaultHandler="com.dylanh.itc.rcp.UndoRedoHandlerFactory:undo"
+            id="com.dylanh.itc.edit.undo"
+            name="Undo">
+      </command>
+      <command
+            defaultHandler="com.dylanh.itc.rcp.UndoRedoHandlerFactory:redo"
+            id="com.dylanh.itc.edit.redo"
+            name="Redo">
       </command>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
-      <key
-            commandId="Image_Template_Changer.open"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="CTRL+2">
-      </key>
-      <key
-            commandId="Image_Template_Changer.openMessage"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="CTRL+3">
-      </key>
       <key
             commandId="org.eclipse.ui.file.exit"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
@@ -95,24 +94,6 @@
       </editor>
    </extension>
    <extension
-         point="org.eclipse.ui.commands">
-      <command
-            defaultHandler="com.dylanh.itc.api.OpenEditorHandler"
-            id="com.dylanh.itc.commands.openeditor"
-            name="Open Editor">
-         <commandParameter
-               id="com.dylanh.itc.openeditor.creatorid"
-               name="Creator ID"
-               optional="false">
-         </commandParameter>
-         <commandParameter
-               id="com.dylanh.itc.openeditor.editorid"
-               name="Editor ID"
-               optional="false">
-         </commandParameter>
-      </command>
-   </extension>
-   <extension
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"
@@ -154,7 +135,62 @@
                   style="push">
             </command>
          </menu>
+         <menu
+               label="Edit"
+               mnemonic="E">
+            <command
+                  commandId="com.dylanh.itc.edit.undo"
+                  style="push">
+            </command>
+            <command
+                  commandId="com.dylanh.itc.edit.redo"
+                  style="push">
+            </command>
+         </menu>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:org.eclipse.ui.main.toolbar">
+         <toolbar
+               id="com.dylanh.itc.history">
+            <command
+                  commandId="com.dylanh.itc.edit.undo"
+                  style="push">
+            </command>
+            <command
+                  commandId="com.dylanh.itc.edit.redo"
+                  style="push">
+            </command>
+         </toolbar>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commandImages">
+      <image
+            commandId="com.dylanh.itc.edit.undo"
+            disabledIcon="IMG_TOOL_UNDO_DISABLED"
+            icon="IMG_TOOL_UNDO">
+      </image>
+      <image
+            commandId="com.dylanh.itc.edit.redo"
+            disabledIcon="IMG_TOOL_REDO_DISABLED"
+            icon="IMG_TOOL_REDO">
+      </image>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="com.dylanh.itc.edit.undo"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+Z">
+      </key>
+      <key
+            commandId="com.dylanh.itc.edit.redo"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+Y">
+      </key>
    </extension>
 
 </plugin>
