@@ -1,10 +1,9 @@
-package com.dylanh.itc.alg;
+package com.dylanh.itc.editor;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.dylanh.itc.data.ColorMapping;
 import com.dylanh.itc.util.RGBA;
 
 public abstract class BestAlphaMatchStrategy implements ColorMappingStrategy {

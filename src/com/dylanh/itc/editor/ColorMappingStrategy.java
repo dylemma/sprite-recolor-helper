@@ -1,8 +1,7 @@
-package com.dylanh.itc.alg;
+package com.dylanh.itc.editor;
 
 import java.util.Collection;
 
-import com.dylanh.itc.data.ColorMapping;
 import com.dylanh.itc.util.RGBA;
 
 public interface ColorMappingStrategy {

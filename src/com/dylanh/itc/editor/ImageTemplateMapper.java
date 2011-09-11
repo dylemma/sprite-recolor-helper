@@ -1,4 +1,4 @@
-package com.dylanh.itc.editor.widgetry;
+package com.dylanh.itc.editor;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,29 +20,23 @@ import org.eclipse.swt.widgets.Scale;
 
 import uky.example.SWTImageCanvas;
 
-import com.dylanh.itc.data.ColorMapping;
-import com.dylanh.itc.util.ColorHelper;
 import com.dylanh.itc.util.RGBA;
 
-public class ImageTemplateMapper
-{
+public class ImageTemplateMapper {
 	private Image mappedImage = null;
 	private final Image input;
 	private final ColorMapping mapping;
 	private final Set<Label> labelsToUpdate = new HashSet<Label>();
 	private final Set<SWTImageCanvas> canvasesToUpdate = new HashSet<SWTImageCanvas>();
 
-	public ImageTemplateMapper(Image input, ColorMapping mapping)
-	{
+	public ImageTemplateMapper(Image input, ColorMapping mapping) {
 		this.input = input;
 		this.mapping = mapping;
 
-		mapping.addListener(new ColorMapping.Listener()
-		{
+		mapping.addListener(new ColorMapping.Listener() {
 
 			@Override
-			public void mappingChanged(ColorMapping mapRef, RGBA key, RGBA oldValue, RGBA newValue)
-			{
+			public void mappingChanged(ColorMapping mapRef, RGBA key, RGBA oldValue, RGBA newValue) {
 				remapImage();
 			}
 		});
@@ -50,30 +44,33 @@ public class ImageTemplateMapper
 		mapImage();
 	}
 
-	public Image getMappedImage()
-	{
+	public Image getMappedImage() {
 		return mappedImage;
 	}
 
-	private void remapImage()
-	{
-		if (mappedImage != null)
-		{
+	private void remapImage() {
+		if (mappedImage != null) {
 			mappedImage.dispose();
 		}
 		mapImage();
-		for (Label label : labelsToUpdate)
-		{
+		for (Label label : labelsToUpdate) {
 			label.setImage(mappedImage);
 		}
-		for (SWTImageCanvas canvas : canvasesToUpdate)
-		{
+		for (SWTImageCanvas canvas : canvasesToUpdate) {
 			canvas.setImageData(mappedImage.getImageData());
 		}
 	}
 
-	public Control createPartControl(Composite parent)
-	{
+	// public Control createPartControl(Composite parent) {
+	// Label label = new Label(parent, SWT.SINGLE);
+	// if (mappedImage != null) {
+	// label.setImage(mappedImage);
+	// }
+	// labelsToUpdate.add(label);
+	// return label;
+	// }
+
+	public Control createPartControl(Composite parent) {
 		Composite area = new Composite(parent, SWT.NONE);
 		area.setLayout(new GridLayout(2, false));
 
@@ -89,19 +86,16 @@ public class ImageTemplateMapper
 
 		Label label = new Label(area, SWT.SINGLE);
 		final SWTImageCanvas canvas = new SWTImageCanvas(area);
-		if (mappedImage != null)
-		{
+		if (mappedImage != null) {
 			label.setImage(mappedImage);
 			canvas.setImageData(mappedImage.getImageData());
 		}
 		labelsToUpdate.add(label);
 		canvasesToUpdate.add(canvas);
 
-		scale.addSelectionListener(new SelectionAdapter()
-		{
+		scale.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e)
-			{
+			public void widgetSelected(SelectionEvent e) {
 				int exp = scale.getSelection() - 3;
 				double zoom = Math.pow(2, exp);
 				zoomLabel.setText("Zoom: " + zoom + "x  ");
@@ -113,8 +107,7 @@ public class ImageTemplateMapper
 		return area;
 	}
 
-	private void mapImage()
-	{
+	private void mapImage() {
 		Rectangle bounds = input.getBounds();
 		ImageData imageData = input.getImageData();
 
@@ -126,11 +119,9 @@ public class ImageTemplateMapper
 		byte[] alphaData = new byte[height * width];
 		// for (int x = 0; x < bounds.width; ++x) {
 		// for (int y = 0; y < bounds.height; ++y) {
-		for (int y = 0; y < height; y++)
-		{
+		for (int y = 0; y < height; y++) {
 			byte[] alphaRow = new byte[width];
-			for (int x = 0; x < width; x++)
-			{
+			for (int x = 0; x < width; x++) {
 				int rawPixel = imageData.getPixel(x, y);
 				RGB pixel = imageData.palette.getRGB(rawPixel);
 				int alpha = imageData.getAlpha(x, y);
