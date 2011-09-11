@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="com.dylanh.itc.editorinputcreator" name="Editor Input Creator" schema="schema/com.dylanh.itc.editorinputcreator.exsd"/>
+
+   <extension
+         id="application"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="com.dylanh.itc.rcp.Application">
+         </run>
+      </application>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="com.dylanh.itc.rcp.Perspective"
+            id="Image_Template_Changer.perspective"
+            name="RCP Perspective">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            name="Mail"
+            id="Image_Template_Changer.category">
+      </category>
+      <command
+            name="Open Mailbox"
+            description="Opens a mailbox"
+            categoryId="Image_Template_Changer.category"
+            id="Image_Template_Changer.open">
+      </command>
+      <command
+            name="Open Message Dialog"
+            description="Open a message dialog"
+            categoryId="Image_Template_Changer.category"
+            id="Image_Template_Changer.openMessage">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="Image_Template_Changer.open"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="CTRL+2">
+      </key>
+      <key
+            commandId="Image_Template_Changer.openMessage"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="CTRL+3">
+      </key>
+      <key
+            commandId="org.eclipse.ui.file.exit"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="CTRL+X">
+      </key>
+   </extension>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="Image_Template_Changer.application"
+            name="Sprite Recolorer">
+         <property
+               name="aboutText"
+               value="A helpful tool for making image sprite recolors.">
+         </property>
+         <property
+               name="windowImages"
+               value="icons/yin-yang.png">
+         </property>
+         <property
+               name="appName"
+               value="Sprite Recolorer">
+         </property>
+      </product>
+   </extension>
+   <extension
+         point="com.dylanh.itc.editorinputcreator">
+      <creator
+            class="com.dylanh.itc.editor.TwoFileInputCreator"
+            id="com.dylanh.itc.api.twofileinput"
+            name="Two File Chooser">
+      </creator>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="com.dylanh.itc.editor.TemplateEditor"
+            default="false"
+            id="com.dylanh.itc.template.editor"
+            name="Template Editor">
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="com.dylanh.itc.api.OpenEditorHandler"
+            id="com.dylanh.itc.commands.openeditor"
+            name="Open Editor">
+         <commandParameter
+               id="com.dylanh.itc.openeditor.creatorid"
+               name="Creator ID"
+               optional="false">
+         </commandParameter>
+         <commandParameter
+               id="com.dylanh.itc.openeditor.editorid"
+               name="Editor ID"
+               optional="false">
+         </commandParameter>
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:org.eclipse.ui.main.menu">
+         <menu
+               label="File"
+               mnemonic="F">
+            <command
+                  commandId="com.dylanh.itc.commands.openeditor"
+                  icon="IMG_OBJ_FOLDER"
+                  label="Open Templates..."
+                  mnemonic="O"
+                  style="push">
+               <parameter
+                     name="com.dylanh.itc.openeditor.editorid"
+                     value="com.dylanh.itc.template.editor">
+               </parameter>
+               <parameter
+                     name="com.dylanh.itc.openeditor.creatorid"
+                     value="com.dylanh.itc.api.twofileinput">
+               </parameter>
+            </command>
+            <command
+                  commandId="org.eclipse.ui.file.save"
+                  label="Save"
+                  mnemonic="S"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.eclipse.ui.file.saveAs"
+                  label="Save As..."
+                  mnemonic="A"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.eclipse.ui.file.exit"
+                  label="Exit"
+                  mnemonic="x"
+                  style="push">
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
+
+</plugin>
