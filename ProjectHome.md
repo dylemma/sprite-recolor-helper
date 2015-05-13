@@ -1,0 +1,1 @@
+A simple tool to help with recoloring sprite images. Input is two images, an image template and a color template.
